@@ -344,6 +344,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     NoCutoutOverlay
 
+# Partitions
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+PRODUCT_RETROFIT_DYNAMIC_PARTITIONS := true
+
 # Pixel Wallpapers (2021)
 PRODUCT_PACKAGES += \
     PixelWallpapers2021
