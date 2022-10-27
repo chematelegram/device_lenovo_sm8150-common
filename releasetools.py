@@ -32,7 +32,8 @@ def FullOTA_InstallBegin(info):
   return
 
 def FullOTA_InstallEnd(info):
-  OTA_InstallEnd(info)
+  input_zip = info.input_zip
+  OTA_InstallEnd(info, input_zip)
   return
 
 def IncrementalOTA_Assertions(info):
@@ -40,7 +41,8 @@ def IncrementalOTA_Assertions(info):
   return
 
 def IncrementalOTA_InstallEnd(info):
-  OTA_InstallEnd(info)
+  input_zip = info.target_zip
+  OTA_InstallEnd(info, input_zip)
   return
 
 def AddModemAssertion(info, input_zip):
@@ -68,5 +70,5 @@ def AddImage(info, dir, input_zip, basename, dest):
 def OTA_InstallEnd(info, input_zip):
   info.script.Print("Patching firmware images...")
   AddImage(info, "IMAGES", input_zip, "dtbo.img", "/dev/block/bootdevice/by-name/dtbo")
-  AddImage(info, "IMAGES", input_zip, "vbmeta.img", "/dev/block/bootdevice/by-name/vbmeta")
+  AddImage(info, "IMAGES", input_zip, "vbmeta.img", "/dev/block/by-name/vbmeta")
   return
