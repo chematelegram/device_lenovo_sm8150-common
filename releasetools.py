@@ -19,42 +19,59 @@ import hashlib
 import common
 import re
 
-def FullOTA_Assertions(info):
-  AddModemAssertion(info, info.input_zip)
-  return
-
 def FullOTA_InstallEnd(info):
-  OTA_InstallEnd(info)
-  return
-
-def IncrementalOTA_Assertions(info):
-  AddModemAssertion(info, info.target_zip)
+  input_zip = info.input_zip
+  OTA_UpdateFirmware(info)
+  OTA_InstallEnd(info, input_zip)
   return
 
 def IncrementalOTA_InstallEnd(info):
-  OTA_InstallEnd(info)
+  input_zip = info.target_zip
+  OTA_UpdateFirmware(info)
+  OTA_InstallEnd(info, input_zip)
   return
 
-def AddModemAssertion(info, input_zip):
-  android_info = info.input_zip.read("OTA/android-info.txt")
-  print('MADONNAAAAAA')
-  print(android_info)
-  m = re.search(r'require\s+version-modem\s*=\s*(.+)', android_info.decode('utf-8'))
-  if m:
-    timestamp, firmware_version = m.group(1).rstrip().split(',')
-    if ((len(timestamp) and '*' not in timestamp) and \
-        (len(firmware_version) and '*' not in firmware_version)):
-      cmd = 'assert(lenovo.verify_modem("{}") == "1" || abort("ERROR: This package requires firmware from ZUI {} build or newer. Please upgrade firmware and retry!"););'
-      info.script.AppendExtra(cmd.format(timestamp, firmware_version))
+def OTA_UpdateFirmware(info):
+  info.script.AppendExtra('package_extract_file("install/firmware-update/aop.mbn", "/dev/block/bootdevice/by-name/aop");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/aop.mbn", "/dev/block/bootdevice/by-name/aopbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/BTFM.bin", "/dev/block/bootdevice/by-name/bluetooth");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/cmnlib.mbn", "/dev/block/bootdevice/by-name/cmnlib");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/cmnlib.mbn", "/dev/block/bootdevice/by-name/cmnlibbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/cmnlib64.mbn", "/dev/block/bootdevice/by-name/cmnlib64");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/cmnlib64.mbn", "/dev/block/bootdevice/by-name/cmnlib64bak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/devcfg.mbn", "/dev/block/bootdevice/by-name/devcfg");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/devcfg.mbn", "/dev/block/bootdevice/by-name/devcfgbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/dspso.bin", "/dev/block/bootdevice/by-name/dsp");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/hyp.mbn", "/dev/block/bootdevice/by-name/hyp");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/hyp.mbn", "/dev/block/bootdevice/by-name/hypbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/imagefv.elf", "/dev/block/bootdevice/by-name/imagefv");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/imagefv.elf", "/dev/block/bootdevice/by-name/imagefvbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/keymaster64.mbn", "/dev/block/bootdevice/by-name/keymaster");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/keymaster64.mbn", "/dev/block/bootdevice/by-name/keymasterbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/NON-HLOS.bin", "/dev/block/bootdevice/by-name/modem");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/qupv3fw.elf", "/dev/block/bootdevice/by-name/qupfw");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/qupv3fw.elf", "/dev/block/bootdevice/by-name/qupfwbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/storsec.mbn", "/dev/block/bootdevice/by-name/storsec");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/storsec.mbn", "/dev/block/bootdevice/by-name/storsecbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/tz.mbn", "/dev/block/bootdevice/by-name/tz");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/tz.mbn", "/dev/block/bootdevice/by-name/tzbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/xbl.elf", "/dev/block/bootdevice/by-name/xbl");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/xbl.elf", "/dev/block/bootdevice/by-name/xblbak");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/xbl_config.elf", "/dev/block/bootdevice/by-name/xbl_config");')
+  info.script.AppendExtra('package_extract_file("install/firmware-update/xbl_config.elf", "/dev/block/bootdevice/by-name/xbl_configbak");')
 
-def AddImage(info, basename, dest):
-  name = basename
-  data = info.input_zip.read("IMAGES/" + basename)
-  common.ZipWriteStr(info.output_zip, name, data)
-  info.script.AppendExtra('package_extract_file("%s", "%s");' % (name, dest))
+def AddImage(info, input_zip, basename, dest):
+  path = "IMAGES/" + basename
+  if path not in input_zip.namelist():
+    return
 
-def OTA_InstallEnd(info):
+  data = input_zip.read(path)
+  common.ZipWriteStr(info.output_zip, basename, data)
+  info.script.Print("Flashing {} image".format(dest.split('/')[-1]))
+  info.script.AppendExtra('package_extract_file("%s", "%s");' % (basename, dest))
+
+def OTA_InstallEnd(info, input_zip):
   info.script.Print("Patching firmware images...")
-  AddImage(info, "vbmeta.img", "/dev/block/bootdevice/by-name/vbmeta")
-  AddImage(info, "dtbo.img", "/dev/block/bootdevice/by-name/dtbo")
+  AddImage(info, input_zip, "dtbo.img", "/dev/block/bootdevice/by-name/dtbo")
+  AddImage(info, input_zip, "vbmeta.img", "/dev/block/bootdevice/by-name/vbmeta")
   return
