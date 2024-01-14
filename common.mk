@@ -26,13 +26,19 @@ TARGET_SCREEN_HEIGHT := 2340
 TARGET_SCREEN_WIDTH := 1080
 
 # Overlays
-DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay \
-    $(LOCAL_PATH)/overlay-lineage
-
 PRODUCT_ENFORCE_RRO_TARGETS := *
-PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += \
-    $(LOCAL_PATH)/overlay-lineage/lineage-sdk \
+
+PRODUCT_PACKAGES += \
+    CellBroadcastReceiverOverlay \
+    DialerOverlay \
+    FrameworksResOverlay \
+    LineageResOverlay \
+    NotchBarKiller \
+    SettingsProviderOverlay \
+    SettingsResOverlay \
+    SystemUIResOverlay \
+    TelephonyResOverlay \
+    WifiOverlay
 
 # Device uses high-density artwork where available
 PRODUCT_AAPT_CONFIG := normal
@@ -352,10 +358,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     netutils-wrapper-1.0
 
-# NotchBarKiller
-PRODUCT_PACKAGES += \
-    NotchBarKiller
-
 # Partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 PRODUCT_RETROFIT_DYNAMIC_PARTITIONS := true
@@ -454,7 +456,6 @@ PRODUCT_PACKAGES += \
     hostapd \
     libwifi-hal-qcom \
     libwpa_client \
-    WifiOverlay \
     wpa_supplicant \
     wpa_supplicant.conf
 
