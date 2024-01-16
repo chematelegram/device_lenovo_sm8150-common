@@ -4,8 +4,7 @@
 //
 
 runtime_resource_overlay {
-    name: "WifiOverlay",
-    theme: "WifiOverlay",
-    sdk_version: "current",
+    name: "TelephonyResOverlay",
+    theme: "TelephonyResOverlay",
     product_specific: true,
 }
