@@ -25,15 +25,6 @@ $(call inherit-product-if-exists, vendor/lenovo/sm8150-common/sm8150-common-vend
 TARGET_SCREEN_HEIGHT := 2340
 TARGET_SCREEN_WIDTH := 1080
 
-# Overlays
-DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay \
-    $(LOCAL_PATH)/overlay-lineage
-
-PRODUCT_ENFORCE_RRO_TARGETS := *
-PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += \
-    $(LOCAL_PATH)/overlay-lineage/lineage-sdk \
-
 # Device uses high-density artwork where available
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxhdpi
@@ -360,9 +351,20 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     netutils-wrapper-1.0
 
-# NoCutout
+# Overlays
+PRODUCT_ENFORCE_RRO_TARGETS := *
+
 PRODUCT_PACKAGES += \
-    NoCutoutOverlay
+    CellBroadcastReceiverOverlayLenovo \
+    DialerOverlayLenovo \
+    FrameworksResOverlayLenovo \
+    LineageResOverlayLenovo \
+    NoCutoutOverlay \
+    SettingsProviderOverlayLenovo \
+    SettingsResOverlayLenovo \
+    SystemUIResOverlayLenovo \
+    TelephonyResOverlayLenovo \
+    WifiOverlayLenovo
 
 # Partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true

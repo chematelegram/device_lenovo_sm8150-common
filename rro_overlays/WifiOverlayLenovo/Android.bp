@@ -1,6 +1,6 @@
 runtime_resource_overlay {
-    name: "WifiOverlay",
-    theme: "WifiOverlay",
+    name: "WifiOverlayLenovo",
+    theme: "WifiOverlayLenovo",
     certificate: "platform",
     sdk_version: "current",
     proprietary: true
