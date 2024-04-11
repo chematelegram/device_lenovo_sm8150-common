@@ -9,9 +9,6 @@
 /data/vendor/dolby(/.*)?                                                               u:object_r:vendor_data_file:s0
 /(vendor|system/vendor)/bin/hw/vendor\.dolby\.hardware\.dms@2\.0-service               u:object_r:hal_dms_default_exec:s0
 
-# Fastcharge HAL
-/(vendor|system/vendor)/bin/hw/vendor\.lineage\.fastcharge@[0-9]\.[0-9]-service\.lenovo_sm8150                          u:object_r:hal_lineage_fastcharge_default_exec:s0
-
 # HALs
 /(vendor|system/vendor)/bin/hw/vendor\.zui\.hardware\.ifaa@1\.0-service                                                 u:object_r:hal_ifaa_default_exec:s0
 /(vendor|system/vendor)/bin/hw/android\.hardware\.lights-service\.lenovo_msmnile                                        u:object_r:hal_light_default_exec:s0

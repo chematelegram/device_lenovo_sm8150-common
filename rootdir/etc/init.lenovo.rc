@@ -9,9 +9,6 @@ on post-fs
     chown audioserver audio /sys/bus/i2c/devices/2-0034/reg
     chown audioserver audio  /sys/bus/i2c/devices/2-0034/rw
 
-on early-init
-    insmod /vendor/lib/modules/audio_tfa9874.ko
-
 on init
     # permission for dt2w
     chown system system /sys/devices/virtual/touch/tp_dev/gesture_on
@@ -19,11 +16,11 @@ on init
     chown system system /sys/devices/virtual/touch/tp_dev/double_tap_enable
     chmod 0660 /sys/devices/virtual/touch/tp_dev/double_tap_enable
 
-    # Add factest service
+# Add factest service
 service factest /vendor/bin/factest
-    class main
-    user root
-    group root system vendor_qti_diag sdcard_rw cache drmrpc
+	class main
+	user root
+	group root system vendor_qti_diag sdcard_rw cache drmrpc
 
 service rfs_for_fac /vendor/bin/rfs_for_fac
     class main
@@ -32,16 +29,19 @@ service rfs_for_fac /vendor/bin/rfs_for_fac
     oneshot
 
 on boot
-    start factest
+	start factest
 # factest end
 
 # add for secure touch feature
 on boot
-    chmod 0660 /sys/devices/platform/soc/a84000.i2c/i2c-3/3-005d/secure_touch_enable
-    chmod 0440 /sys/devices/platform/soc/a84000.i2c/i2c-3/3-005d/secure_touch
-    mkdir /mnt/vendor/persist/factory 0775 system system
+   chmod 0660 /sys/devices/platform/soc/a84000.i2c/i2c-3/3-005d/secure_touch_enable
+   chmod 0440 /sys/devices/platform/soc/a84000.i2c/i2c-3/3-005d/secure_touch
+   mkdir /mnt/vendor/persist/factory 0775 system system
 
-# camera tof
+on early-init
+   insmod /vendor/lib/modules/audio_tfa9874.ko
+
+#camera tof
 service vl53l1_daemon_main /vendor/bin/vl53l1_daemon_main
     class late_start
     user root
@@ -50,16 +50,11 @@ service vl53l1_daemon_main /vendor/bin/vl53l1_daemon_main
 
 # for battery and thermal
 on boot
-    chmod 666 /sys/class/power_supply/battery/user_charge_op
-    chmod 666 /sys/class/power_supply/battery/user_charge_soc
+   chmod 666 /sys/class/power_supply/battery/user_charge_op
+   chmod 666 /sys/class/power_supply/battery/user_charge_soc
 
 on boot
-    mkdir /mnt/vendor/persist/tof 0775 system system
-
-# Fast Charge
-on boot
-    chown system system /sys/class/qcom-battery/restrict_chg
-    chmod 0666 /sys/class/qcom-battery/restrict_chg
+   mkdir /mnt/vendor/persist/tof 0775 system system
 
 # Factory reset start
 #on property:vendor.wipe_data=1

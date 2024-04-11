@@ -13,10 +13,7 @@ sys.camera.packagename.zui                                      u:object_r:vendo
 sys.camera.restart.mark                                         u:object_r:vendor_camera_prop:s0
 sys.tof.cal                                                     u:object_r:vendor_camera_prop:s0
 
-# Fastcharge HAL
-persist.vendor.sec.fastchg_enabled                              u:object_r:vendor_fastcharge_prop:s0
-
-# Fingerprint
+#Fingerprint
 gf.debug.                                                       u:object_r:vendor_default_prop:s0
 
 # Lenovo factory props

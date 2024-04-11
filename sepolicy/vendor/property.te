@@ -1,5 +1,2 @@
 vendor_internal_prop(fac_prop)
 vendor_internal_prop(vendor_power_prop)
-
-# Fastcharge
-vendor_internal_prop(vendor_fastcharge_prop)
